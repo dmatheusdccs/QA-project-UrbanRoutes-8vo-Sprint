@@ -68,7 +68,7 @@ class ComfortMethod:
     def select_comfort(self):
         self.driver.find_element(*self.comfort_button).click()
     def return_status_trip(self):
-        return self.driver.find_element(*self.comfort_button).is_selected()
+        return self.driver.find_element(*self.comfort_button).is_displayed()
 
 #Clase para seccion de llenado de numero telefonico
 class AddPhoneNumber:
@@ -184,7 +184,7 @@ class TestUrbanRoutes:
         travel_method=ComfortMethod(self.driver)
         travel_method.select_comfort()
         WebDriverWait(self.driver,10)
-        assert travel_method.return_status_trip()=="True"
+        assert travel_method.return_status_trip()==True
 
     #Prueba 3 Comprobar el llenado de numero telefonico
     def test_select_phone_number(self):
@@ -194,13 +194,14 @@ class TestUrbanRoutes:
         new_phone=data.phone_number
         send_new_phone.sent_phone_nomber(new_phone)
         assert send_new_phone.return_phon_number()==new_phone
-
-    #Obtener codigo de verificación 
-    def get_gode(self):
         WebDriverWait(self.driver,10).until(expected_conditions.element_to_be_clickable((By.ID,"code")))
-        self.driver.find_element(By.ID,"code").send_keys(retrieve_phone_code(self.driver))
-        self.driver.find_element(By.XPATH,".//*[text()='Confirmar']").click()
 
+        # Obtener codigo de verificación
+        def get_gode(self):
+            WebDriverWait(self.driver, 10).until(expected_conditions.element_to_be_clickable((By.ID, "code")))
+            self.driver.find_element(By.ID, "code").send_keys(retrieve_phone_code(self.driver))
+            self.driver.find_element(By.XPATH, ".//*[text()='Confirmar']").click()
+            
     #Prueba 4 Agregar tarjeta de credito y confirmar datos
     def test_add_credit_card(self):
         WebDriverWait(self.driver,10).until(expected_conditions.element_to_be_clickable((By.XPATH,".//div[@class='pp-button filled']")))
@@ -215,7 +216,7 @@ class TestUrbanRoutes:
         assert add_new_credi_card.return_cvv_info()==credit_card_number
         assert add_new_credi_card.return_cvv_info()==cvv_credit_card
     #Prueba 5 escribir un mensaje para el controlador
-    def tes_whrite_message(self):
+    def test_whrite_message(self):
         WebDriverWait(self.driver,10).until(expected_conditions.element_to_be_clickable((By.ID,"comment")))
         message=data.message_for_driver
         whrite_message=SendNewMessage(self.driver)
