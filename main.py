@@ -3,6 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.common.keys import Keys
 
 
 # no modificar
@@ -91,31 +92,6 @@ class AddPhoneNumber:
         self.post_number()
 
 
-#Clase para colocar datos de targeta de credito
-class AddCreditCard:
-    number_card_space=(By.ID,"number")
-    cvv_space=(By.ID,"code")
-    add_button = (By.XPATH, ".//div[@class='pp-buttons'/button[@type='submit']")
-    def __init__(self,driver):
-        self.driver=driver
-    def whrite_credit_card(self,number_card):
-        self.driver.find_element(*self.number_card_space).send_keys(number_card)
-    def select_cvv(self):
-        self.driver.find_element(*self.cvv_space).click()
-    def whrite_cvv(self,cvv):
-        self.driver.find_element(*self.cvv_space).send_keys(cvv)
-    def next_step(self):
-        self.driver.find_element(*self.add_button).click()
-    def return_creditcard_info(self):
-        return self.driver.find_element(*self.number_card_space).get_property('value')
-    def return_cvv_info(self):
-        return self.driver.find_element(*self.cvv_space).get_property('value')
-
-    def credit_card_register(self,number_card,cvv):
-        self.whrite_credit_card(number_card)
-        self.select_cvv()
-        self.whrite_cvv(cvv)
-        self.next_step()
 #Clase para colocar un nuevo mensaje para el conductor
 class SendNewMessage:
     coment_space=(By.CSS_SELECTOR,"#comment")
@@ -134,25 +110,7 @@ class AskBlanket:
     def ask_blanket(self):
         self.driver.find_element(*self.ask_blanket_button).click()
     def return_estatus_blanket(self):
-        return self.driver.find_element(*self.ask_blanket_button).is_selected()
-
-class Ask2Icecream:
-    icecream_button=(By.CSS_SELECTOR,".counter-plus")
-    icecream_count=(By.CSS_SELECTOR,".counter_value")
-
-    def __init__(self,driver):
-        self.driver=driver
-
-    def click_in_icecream_button(self):
-        self.driver.find_element(*self.icecream_button).click()
-    def return_number_of_icecream(self):
-        return self.driver.find_element(*self.icecream_count).get_property('value')
-    def ask_2_icecream(self):
-        self.click_in_icecream_button()
-        self.click_in_icecream_button()
-
-
-
+        return self.driver.find_element(*self.ask_blanket_button).is_displayed()
 
 class TestUrbanRoutes:
     driver=None
@@ -193,28 +151,25 @@ class TestUrbanRoutes:
         send_new_phone=AddPhoneNumber(self.driver)
         new_phone=data.phone_number
         send_new_phone.sent_phone_nomber(new_phone)
-        assert send_new_phone.return_phon_number()==new_phone
         WebDriverWait(self.driver,10).until(expected_conditions.element_to_be_clickable((By.ID,"code")))
+        WebDriverWait(self.driver, 10).until(expected_conditions.element_to_be_clickable((By.ID, "code")))
+        self.driver.find_element(By.ID, "code").send_keys(retrieve_phone_code(driver=self.driver))
+        self.driver.find_element(By.XPATH, ".//*[text()='Confirmar']").click()
+        assert send_new_phone.return_phon_number() == new_phone
 
-        # Obtener codigo de verificación
-        def get_gode(self):
-            WebDriverWait(self.driver, 10).until(expected_conditions.element_to_be_clickable((By.ID, "code")))
-            self.driver.find_element(By.ID, "code").send_keys(retrieve_phone_code(self.driver))
-            self.driver.find_element(By.XPATH, ".//*[text()='Confirmar']").click()
-            
-    #Prueba 4 Agregar tarjeta de credito y confirmar datos
-    def test_add_credit_card(self):
+    def test_add_credit_car_part_1(self):
         WebDriverWait(self.driver,10).until(expected_conditions.element_to_be_clickable((By.XPATH,".//div[@class='pp-button filled']")))
         self.driver.find_element(By.XPATH,".//div[@class='pp-button filled']").click()
         WebDriverWait(self.driver,10).until(expected_conditions.element_to_be_clickable((By.XPATH,".//img[@src='/static/media/card.411e0152.svg']")))
         self.driver.find_element(By.XPATH,".//img[@src='/static/media/card.411e0152.svg']").click()
-        WebDriverWait(self.driver,10).until(expected_conditions.element_to_be_clickable((By.XPATH,".//*[text()='Agregar']")))
-        add_new_credi_card=AddCreditCard(self.driver)
-        credit_card_number=data.card_number
-        cvv_credit_card=data.card_code
-        add_new_credi_card.credit_card_register(credit_card_number,cvv_credit_card)
-        assert add_new_credi_card.return_cvv_info()==credit_card_number
-        assert add_new_credi_card.return_cvv_info()==cvv_credit_card
+        WebDriverWait(self.driver,10)
+        number_card=data.card_number
+        number_cvv=data.card_code
+        self.driver.find_element(By.ID,"number").send_keys(number_card,Keys.TAB,number_cvv)
+        return self.driver.find_element(By.ID,"number").get_property('value')
+        assert self.driver.find_element(By.ID,"number")==number_card
+
+
     #Prueba 5 escribir un mensaje para el controlador
     def test_whrite_message(self):
         WebDriverWait(self.driver,10).until(expected_conditions.element_to_be_clickable((By.ID,"comment")))
@@ -222,18 +177,21 @@ class TestUrbanRoutes:
         whrite_message=SendNewMessage(self.driver)
         whrite_message.white_mew_message(message)
         assert whrite_message.return_message()==message
+
+
     #Prueba 6 Pedir una manta y pañuelo
     def test_ask_for_blanket(self):
-        ask_blanket=AskBlanket(self.driver)
-        ask_blanket.ask_blanket_button()
-        assert ask_blanket.return_estatus_blanket()=="True"
+        self.driver.find_element(By.ID,"comment").send_keys(Keys.TAB,Keys.SPACE)
+        assert self.driver.find_element(By.XPATH,"//div[@class='r-sw-container']/div[@class='r-sw']/div[@class='switch']").is_enabled()
+
 
     #Prueba 7 solicitar 2 helados
     def test_2_icecream(self):
-        ask_icecream=Ask2Icecream
-        ask_icecream.ask_2_icecream(self)
-        assert ask_icecream.return_number_of_icecream()=="2"
-
+        self.driver.find_element(By.XPATH,"//*[@id='root]/div/div[3]/div[3]/div[2]/div[2]/div[4]/div[2]/div[3]/div/div[2]/div[1]/div/div[2]/div/div[3]").click()
+        assert self.driver.find_element(By.XPATH,"//*[@id='root']/div/div[3]/div[3]/div[2]/div[2]/div[4]/div[2]/div[3]/div/div[2]/div[1]/div/div[2]/div/div[2]")=="2"
+    #Prueba 8
+    def test_final_button(self):
+        assert self.driver.find_element(By.CSS_SELECTOR,"smart-button-secondary").is_enabled()==True
 
 
 

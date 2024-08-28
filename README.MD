@@ -49,4 +49,13 @@ La cual cuenta con los diferentes proceso relacionados a la solicitud requerida
 * Pedir 2 helados
 * Aparece el modal para buscar un taxi
 
+## Procedimiento
+
+Durante este proceso se realizó una automatización
+tipo flujo contemplando un escenario general, en donde se
+solicita un taxi para ello se usó Python y se desargo e
+instaló Selenium para Chrome
+
+Durante las diferentes etapas se realizaron diferentes procesos de verificación
+dando como restultado 8 diferentes pruebas. 
 *Realizado por Raul H. Burguete Salazar*
