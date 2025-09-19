@@ -126,9 +126,10 @@ You can install these dependencies using:
 pip install selenium pytest
 
 requirements.txt
-###### selenium==4.0.0
-###### pytest==6.2.5
----
+```
+ selenium==4.0.0
+ pytest==6.2.5
+````
 
 
 Conclusion:
