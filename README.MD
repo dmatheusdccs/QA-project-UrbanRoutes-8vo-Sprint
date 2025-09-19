@@ -1,10 +1,8 @@
 # QA Urban Routes
+---
+![Python](https://img.shields.io/badge/Python-3.x-blue.svg) ![Selenium](https://img.shields.io/badge/Selenium-4.x-orange.svg) ![Chrome](https://img.shields.io/badge/Chrome-Driver-green.svg) ![PyTest](https://img.shields.io/badge/PyTest-v6.2.x-blueviolet.svg)
 
-![Python](https://img.shields.io/badge/Python-3.x-blue.svg)
-![Selenium](https://img.shields.io/badge/Selenium-4.x-orange.svg)
-![Chrome](https://img.shields.io/badge/Chrome-Driver-green.svg)
-![PyTest](https://img.shields.io/badge/PyTest-v6.2.x-blueviolet.svg)
-
+---
 ## Project Overview
 
 This project is an automation script built using **Selenium** and **Python** for testing the **Urban Routes** web application. The main goal of this project is to automate the process of making a ride request through the platform, ensuring that all essential steps are correctly validated.
@@ -71,6 +69,7 @@ If you want to run a specific test file, use:
 
 
 pytest -q src/test_urban_routes.py
+
 Generate a coverage report:
 You can generate a coverage report by using the following command:
 
@@ -103,7 +102,8 @@ def retrieve_phone_code(driver) -> str:
     code = None
     for _ in range(10):
         try:
-            logs = [log["message"] for log in driver.get_log('performance') if log.get("message") and 'api/v1/number?number' in log.get("message")]
+            logs = [log["message"] for log in driver.get_log('performance') 
+            if log.get("message") and 'api/v1/number?number' in log.get("message")]
             for log in reversed(logs):
                 message_data = json.loads(log)["message"]
                 body = driver.execute_cdp_cmd('Network.getResponseBody', {'requestId': message_data["params"]["requestId"]})
@@ -126,8 +126,10 @@ You can install these dependencies using:
 pip install selenium pytest
 
 requirements.txt
-selenium==4.0.0
-pytest==6.2.5
+###### selenium==4.0.0
+###### pytest==6.2.5
+---
 
-Conclusion
+
+Conclusion:
 This project automates the process of requesting a ride via the Urban Routes application. By leveraging Selenium and Python, we ensure that all essential functionalities, such as ride configuration, phone number validation, and payment method setup, work as expected. Each step is verified with automated tests that ensure reliability and maintainability of the system.
