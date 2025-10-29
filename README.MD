@@ -118,9 +118,9 @@ def retrieve_phone_code(driver) -> str:
 Dependencies
 This project relies on the following Python packages:
 
-Selenium: For web automation.
-PyTest: To run tests and validate the automation.
-WebDriver: To use ChromeDriver for Selenium tests.
+Selenium: For web automation
+PyTest: To run tests and validate the automation
+WebDriver: To use ChromeDriver for Selenium tests
 You can install these dependencies using:
 
 pip install selenium pytest
